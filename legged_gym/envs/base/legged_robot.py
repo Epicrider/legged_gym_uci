@@ -541,6 +541,10 @@ class LeggedRobot(BaseTask):
                     print(f"PD gain of joint {name} were not defined, setting them to zero")
         self.default_dof_pos = self.default_dof_pos.unsqueeze(0)
 
+        # Learning Debug:
+        print('torques Size: ', self.torques.size())
+        print('dof_vel Size: ', self.dof_vel.size())
+
     def _prepare_reward_function(self):
         """ Prepares a list of reward functions, whcih will be called to compute the total reward.
             Looks for self._reward_<REWARD_NAME>, where <REWARD_NAME> are names of all non zero reward scales in the cfg.
@@ -833,6 +837,10 @@ class LeggedRobot(BaseTask):
     def _reward_torques(self):
         # Penalize torques
         return torch.sum(torch.square(self.torques), dim=1)
+
+    def _reward_dof_power(self):
+        # Penalize torques plus angular velocity (torchsum)
+        return torch.sum()
 
     def _reward_dof_vel(self):
         # Penalize dof velocities
