@@ -542,8 +542,8 @@ class LeggedRobot(BaseTask):
         self.default_dof_pos = self.default_dof_pos.unsqueeze(0)
 
         # Learning Debug:
-        print('torques Size: ', self.torques.size())
-        print('dof_vel Size: ', self.dof_vel.size())
+        # print('torques Size: ', self.torques.size())
+        # print('dof_vel Size: ', self.dof_vel.size())
 
     def _prepare_reward_function(self):
         """ Prepares a list of reward functions, whcih will be called to compute the total reward.
@@ -840,7 +840,7 @@ class LeggedRobot(BaseTask):
 
     def _reward_dof_power(self):
         # Penalize torques plus angular velocity (torchsum)
-        return torch.sum()
+        return torch.sum(torch.mul(self.torques, self.dof_vel))
 
     def _reward_dof_vel(self):
         # Penalize dof velocities
