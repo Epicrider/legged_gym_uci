@@ -312,9 +312,17 @@ class LeggedRobot(BaseTask):
         #         print(f"Mass of body {i}: {p.mass} (before randomization)")
         #     print(f"Total mass {sum} (before randomization)")
         # randomize base mass
+
         if self.cfg.domain_rand.randomize_base_mass:
-            rng = self.cfg.domain_rand.added_mass_range
+            rng = self.cfg.domain_rand.added_base_mass_range
+            # NOTE: Does 0 and refer to the base mass of the robot, and not com?
+            # props[0].mass would refer to center of mass
             props[0].mass += np.random.uniform(rng[0], rng[1])
+        if self.cfg.domain_rand.randomize_link_mass:
+            for i in range(1, len(props)):
+                rng = self.cfg.domain_rand.added_link_mass_range
+                props[i].mass += np.random.uniform(rng[0], rng[1])
+
         return props
     
     def _post_physics_step_callback(self):
