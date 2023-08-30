@@ -321,7 +321,7 @@ class LeggedRobot(BaseTask):
         if self.cfg.domain_rand.randomize_link_mass:
             for i in range(1, len(props)):
                 rng = self.cfg.domain_rand.added_link_mass_range
-                props[i].mass += np.random.uniform(rng[0], rng[1])
+                props[i].mass *= np.random.uniform(rng[0], rng[1])
 
         return props
     
