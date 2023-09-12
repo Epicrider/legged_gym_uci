@@ -319,7 +319,8 @@ class LeggedRobot(BaseTask):
             # props[0].mass would refer to center of mass
             props[0].mass += np.random.uniform(rng[0], rng[1])
         if self.cfg.domain_rand.randomize_link_mass:
-            for i in range(1, len(props)):
+            for i in (2, 3, 6, 7, 10, 11, 14, 15):
+                print(i)
                 rng = self.cfg.domain_rand.added_link_mass_range
                 props[i].mass *= np.random.uniform(rng[0], rng[1])
 
