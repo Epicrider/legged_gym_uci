@@ -33,6 +33,7 @@ from time import time
 from warnings import WarningMessage
 import numpy as np
 import os
+import random
 
 from isaacgym.torch_utils import *
 from isaacgym import gymtorch, gymapi, gymutil
@@ -364,14 +365,17 @@ class LeggedRobot(BaseTask):
         #pd controller
         actions_scaled = actions * self.cfg.control.action_scale
         control_type = self.cfg.control.control_type
+        # p_gains size: 12
+        # actions_scaled size: 4096, 12
         if control_type=="P":
-            torques = self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel
+            torques = self.breakage_mask * (self.p_gains*(actions_scaled + self.default_dof_pos - self.dof_pos) - self.d_gains*self.dof_vel)
         elif control_type=="V":
             torques = self.p_gains*(actions_scaled - self.dof_vel) - self.d_gains*(self.dof_vel - self.last_dof_vel)/self.sim_params.dt
         elif control_type=="T":
             torques = actions_scaled
         else:
             raise NameError(f"Unknown controller type: {control_type}")
+        # torques size: 4096, 12
         return torch.clip(torques, -self.torque_limits, self.torque_limits)
 
     def _reset_dofs(self, env_ids):
@@ -540,6 +544,15 @@ class LeggedRobot(BaseTask):
                 if self.cfg.control.control_type in ["P", "V"]:
                     print(f"PD gain of joint {name} were not defined, setting them to zero")
         self.default_dof_pos = self.default_dof_pos.unsqueeze(0)
+
+        joint_shape = (self.cfg.env.num_envs, self.num_dofs)
+        self.breakage_mask = torch.ones(*joint_shape, dtype=torch.float, device=self.device, requires_grad=False)
+        if (self.cfg.control.break_joints):
+            for i in range(self.cfg.env.num_envs):
+                break_joint = random.randint(8, 11)
+                self.breakage_mask[i, break_joint] = 0
+            print(self.breakage_mask)
+        
 
     def _prepare_reward_function(self):
         """ Prepares a list of reward functions, whcih will be called to compute the total reward.
