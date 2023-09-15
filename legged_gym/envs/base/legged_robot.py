@@ -551,7 +551,6 @@ class LeggedRobot(BaseTask):
             for i in range(self.cfg.env.num_envs):
                 break_joint = random.randint(8, 11)
                 self.breakage_mask[i, break_joint] = 0
-            print(self.breakage_mask)
         
 
     def _prepare_reward_function(self):
