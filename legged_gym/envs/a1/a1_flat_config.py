@@ -43,6 +43,10 @@ class A1FlatCfg( LeggedRobotCfg ):
         penalize_contacts_on = ["thigh", "calf"]
         terminate_after_contacts_on = ["base"]
         self_collisions = 1 # 1 to disable, 0 to enable...bitwise filter
+
+    class domain_rand( LeggedRobotCfg.domain_rand ):
+        randomize_base_mass = False
+        randomize_link_mass = True
   
     class rewards( LeggedRobotCfg.rewards ):
         soft_dof_pos_limit = 0.9
@@ -50,6 +54,7 @@ class A1FlatCfg( LeggedRobotCfg ):
         class scales( LeggedRobotCfg.rewards.scales ):
             torques = -0.0002
             dof_pos_limits = -10.0
+            dof_power = -0.
 
 class A1FlatCfgPPO( LeggedRobotCfgPPO ):
     class algorithm( LeggedRobotCfgPPO.algorithm ):
