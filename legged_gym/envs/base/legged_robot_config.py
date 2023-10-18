@@ -138,6 +138,7 @@ class LeggedRobotCfg(BaseConfig):
             torques = -0.00001
             dof_vel = -0.
             dof_acc = -2.5e-7
+            dof_power = -0. # For _reward_dof_power
             base_height = -0. 
             feet_air_time =  1.0
             collision = -1.
