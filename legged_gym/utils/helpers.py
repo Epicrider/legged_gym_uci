@@ -158,6 +158,10 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
             cfg_train.runner.load_run = args.load_run
         if args.checkpoint is not None:
             cfg_train.runner.checkpoint = args.checkpoint
+        if args.actor_hidden_dims is not None:
+            cfg_train.policy.actor_hidden_dims = [int(num) for num in args.actor_hidden_dims.split(",")]
+        if args.critic_hidden_dims is not None:
+            cfg_train.policy.critic_hidden_dims = [int(num) for num in args.critic_hidden_dims.split(",")]
 
 
     return env_cfg, cfg_train
@@ -177,6 +181,8 @@ def get_args():
         {"name": "--num_envs", "type": int, "help": "Number of environments to create. Overrides config file if provided."},
         {"name": "--seed", "type": int, "help": "Random seed. Overrides config file if provided."},
         {"name": "--max_iterations", "type": int, "help": "Maximum number of training iterations. Overrides config file if provided."},
+        {"name": "--actor_hidden_dims", "type": str, "help": "Defines Actor Hidden Dimensions for Policy."}, # Make more descriptive
+        {"name": "--critic_hidden_dims", "type": str, "help": "Defines Critic Hidden Dimensions for Policy."}, # Make more descriptive
 
         {"name": "--randomize_base_mass", "type": bool, "help": "Randomize Base mass based on range specified in configuration or flags."},
         {"name": "--randomize_base_mass_range_min", "type": float, "help": "Min range for randomize base mass amount based on proportional value."},
