@@ -132,14 +132,12 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
             env_cfg.env.num_envs = args.num_envs
         if args.randomize_base_mass is not None:
             env_cfg.domain_rand.randomize_base_mass = args.randomize_base_mass
-        if args.randomize_base_mass_range_min is not None:
-            if args.randomize_base_mass_range_max is not None:
-                env_cfg.domain_rand.added_base_mass_range = [args.randomize_base_mass_range_min, args.randomize_base_mass_range_max]
+        if args.randomize_base_mass_range is not None:
+            env_cfg.domain_rand.added_base_mass_range = [float(num) for num in args.randomize_base_mass_range.split(',')] 
         if args.randomize_link_mass is not None:
             env_cfg.domain_rand.randomize_link_mass = args.randomize_link_mass
-        if args.randomize_link_mass_range_min is not None:
-            if args.randomize_link_mass_range_max is not None:
-                env_cfg.domain_rand.added_link_mass_range = [args.randomize_link_mass_range_min, args.randomize_link_mass_range_max]
+        if args.randomize_link_mass_range is not None:
+            env_cfg.domain_rand.added_link_mass_range = [float(num) for num in args.randomize_link_mass_range.split(',')] 
         if args.break_joints is not None:
             env_cfg.control.break_joints = args.break_joints
     if cfg_train is not None:
@@ -159,9 +157,9 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
         if args.checkpoint is not None:
             cfg_train.runner.checkpoint = args.checkpoint
         if args.actor_hidden_dims is not None:
-            cfg_train.policy.actor_hidden_dims = [int(num) for num in args.actor_hidden_dims.split(",")]
+            cfg_train.policy.actor_hidden_dims = [int(num) for num in args.actor_hidden_dims.split(',')]
         if args.critic_hidden_dims is not None:
-            cfg_train.policy.critic_hidden_dims = [int(num) for num in args.critic_hidden_dims.split(",")]
+            cfg_train.policy.critic_hidden_dims = [int(num) for num in args.critic_hidden_dims.split(',')]
 
 
     return env_cfg, cfg_train
@@ -185,11 +183,9 @@ def get_args():
         {"name": "--critic_hidden_dims", "type": str, "help": "Defines Critic Hidden Dimensions for Policy."}, # Make more descriptive
 
         {"name": "--randomize_base_mass", "type": bool, "help": "Randomize Base mass based on range specified in configuration or flags."},
-        {"name": "--randomize_base_mass_range_min", "type": float, "help": "Min range for randomize base mass amount based on proportional value."},
-        {"name": "--randomize_base_mass_range_max", "type": float, "help": "Max range for randomize base mass amount based on proportional value."},
+        {"name": "--randomize_base_mass_range", "type": str, "help": "Range for randomize base mass amount based on proportional value."},
         {"name": "--randomize_link_mass", "type": bool, "help": "Randomize Link mass based on range specified in configuration or flags."},
-        {"name": "--randomize_link_mass_range_min", "type": float, "help": "Min range for randomize link mass amount based on proportional value."},
-        {"name": "--randomize_link_mass_range_max", "type": float, "help": "Max range for randomize link mass amount based on proportional value."},
+        {"name": "--randomize_link_mass_range", "type": str, "help": "Range for randomize link mass amount based on proportional value."},
         {"name": "--break_joints", "type": bool, "help": "Breaks a random joint."}, # Make more descriptive
     ]
     # parse arguments
