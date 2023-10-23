@@ -59,6 +59,8 @@ class BaseTask():
 
         self.num_envs = cfg.env.num_envs
         self.num_obs = cfg.env.num_observations
+        if (cfg.domain_rand.randomize_base_mass or cfg.domain_rand.randomize_link_mass):
+            self.num_obs += 16 # Is this the best way to add observations? Do I need to add observation number?
         self.num_privileged_obs = cfg.env.num_privileged_obs
         self.num_actions = cfg.env.num_actions
 

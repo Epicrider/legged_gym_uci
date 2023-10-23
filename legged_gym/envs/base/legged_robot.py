@@ -224,7 +224,12 @@ class LeggedRobot(BaseTask):
             self.obs_buf = torch.cat((self.obs_buf, heights), dim=-1)
         # add noise if needed
         if self.add_noise:
-            self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec
+            self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec # Giving the most problem because it uses 235, the size without the random mass
+        if self.cfg.domain_rand.randomize_base_mass or self.cfg.domain_rand.randomize_link_mass:
+            print(self.obs_buf.size())
+            print(self.random_mass_change.size())
+            self.obs_buf = torch.cat((self.obs_buf, self.random_mass_change), dim=-1)
+
 
     def create_sim(self):
         """ Creates simulation, terrain and evironments
@@ -314,15 +319,23 @@ class LeggedRobot(BaseTask):
         #     print(f"Total mass {sum} (before randomization)")
         # randomize base mass
 
+        # Has 12 elements and will be added to observation buffer
+        # Will be added to observation buffer if, and only if, there is randomized mass of some kind turned on
+        # TODO: Will not work like so: Need to make a num_env, by 16 vector ahead of time and this function changes it depending on the robot
+        self.random_mass_change = torch.zeros(self.num_envs, 16, dtype=torch.float, device=self.device, requires_grad=False)  
+
         if self.cfg.domain_rand.randomize_base_mass:
             rng = self.cfg.domain_rand.added_base_mass_range
             # NOTE: Does 0 and refer to the base mass of the robot, and not com?
             # props[0].mass would refer to center of mass
             props[0].mass += np.random.uniform(rng[0], rng[1])
+            self.random_mass_change[0] = props[0].mass
         if self.cfg.domain_rand.randomize_link_mass:
             for i in (2, 3, 6, 7, 10, 11, 14, 15):
-                rng = self.cfg.domain_rand.added_link_mass_range
-                props[i].mass *= np.random.uniform(rng[0], rng[1])
+                rng_range = self.cfg.domain_rand.added_link_mass_range
+                rng = np.random.uniform(rng_range[0], rng_range[1])
+                props[i].mass *= rng
+                self.random_mass_change[i] = props[i].mass
 
         return props
     
@@ -464,6 +477,7 @@ class LeggedRobot(BaseTask):
             self.command_ranges["lin_vel_x"][1] = np.clip(self.command_ranges["lin_vel_x"][1] + 0.5, 0., self.cfg.commands.max_curriculum)
 
 
+    # TODO: Make a1 class that extends this and use that to write a new get noise scale vec function, if we want to use noise in our experiments
     def _get_noise_scale_vec(self, cfg):
         """ Sets a vector used to scale the noise added to the observations.
             [NOTE]: Must be adapted when changing the observations structure
