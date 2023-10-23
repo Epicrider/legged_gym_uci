@@ -96,7 +96,7 @@ class LeggedRobotCfg(BaseConfig):
         # decimation: Number of control action updates @ sim DT per policy DT
         decimation = 4
         # break_joints: Randomly disable calf joints (1 of the legs for each robot)
-        break_joints = True
+        break_joints = False
 
     class asset:
         file = ""

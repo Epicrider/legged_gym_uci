@@ -128,11 +128,13 @@ class TaskRegistry():
             if name is None:
                 raise ValueError("Either 'name' or 'train_cfg' must be not None")
             # load config files
+            # train_cfg will have all the parameters corresponding to the configurations
             _, train_cfg = self.get_cfgs(name)
         else:
             if name is not None:
                 print(f"'train_cfg' provided -> Ignoring 'name={name}'")
         # override cfg from args (if specified)
+        # including randomzing mass and breaking leg
         _, train_cfg = update_cfg_from_args(None, train_cfg, args)
 
         if log_root=="default":

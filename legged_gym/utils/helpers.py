@@ -130,6 +130,18 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
         # num envs
         if args.num_envs is not None:
             env_cfg.env.num_envs = args.num_envs
+        if args.randomize_base_mass is not None:
+            env_cfg.domain_rand.randomize_base_mass = args.randomize_base_mass
+        if args.randomize_base_mass_range_min is not None:
+            if args.randomize_base_mass_range_max is not None:
+                env_cfg.domain_rand.added_base_mass_range = [args.randomize_base_mass_range_min, args.randomize_base_mass_range_max]
+        if args.randomize_link_mass is not None:
+            env_cfg.domain_rand.randomize_link_mass = args.randomize_link_mass
+        if args.randomize_link_mass_range_min is not None:
+            if args.randomize_link_mass_range_max is not None:
+                env_cfg.domain_rand.added_link_mass_range = [args.randomize_link_mass_range_min, args.randomize_link_mass_range_max]
+        if args.break_joints is not None:
+            env_cfg.control.break_joints = args.break_joints
     if cfg_train is not None:
         if args.seed is not None:
             cfg_train.seed = args.seed
@@ -146,6 +158,7 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
             cfg_train.runner.load_run = args.load_run
         if args.checkpoint is not None:
             cfg_train.runner.checkpoint = args.checkpoint
+
 
     return env_cfg, cfg_train
 
@@ -164,6 +177,14 @@ def get_args():
         {"name": "--num_envs", "type": int, "help": "Number of environments to create. Overrides config file if provided."},
         {"name": "--seed", "type": int, "help": "Random seed. Overrides config file if provided."},
         {"name": "--max_iterations", "type": int, "help": "Maximum number of training iterations. Overrides config file if provided."},
+
+        {"name": "--randomize_base_mass", "type": bool, "help": "Randomize Base mass based on range specified in configuration or flags."},
+        {"name": "--randomize_base_mass_range_min", "type": float, "help": "Min range for randomize base mass amount based on proportional value."},
+        {"name": "--randomize_base_mass_range_max", "type": float, "help": "Max range for randomize base mass amount based on proportional value."},
+        {"name": "--randomize_link_mass", "type": bool, "help": "Randomize Link mass based on range specified in configuration or flags."},
+        {"name": "--randomize_link_mass_range_min", "type": float, "help": "Min range for randomize link mass amount based on proportional value."},
+        {"name": "--randomize_link_mass_range_max", "type": float, "help": "Max range for randomize link mass amount based on proportional value."},
+        {"name": "--break_joints", "type": bool, "help": "Breaks a random joint."}, # Make more descriptive
     ]
     # parse arguments
     args = gymutil.parse_arguments(
