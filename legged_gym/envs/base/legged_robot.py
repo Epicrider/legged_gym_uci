@@ -320,16 +320,23 @@ class LeggedRobot(BaseTask):
         #     print(f"Total mass {sum} (before randomization)")
         # randomize base mass
 
-        # Has 12 elements and will be added to observation buffer
-        # Will be added to observation buffer if, and only if, there is randomized mass of some kind turned on
-        # TODO: Will not work like so: Need to make a num_env, by 16 vector ahead of time and this function changes it depending on the robot
-        self.random_mass_change = torch.zeros(self.num_envs, 16, dtype=torch.float, device=self.device, requires_grad=False)  
+        if self.cfg.domain_rand.randomize_base_mass and self.cfg.domain_rand.randomize_link_mass:
+            random_mass_change_size = 18
+        elif self.cfg.domain_rand.randomize_base_mass:
+            random_mass_change_size = 1
+        elif self.cfg.domain_rand.randomize_link_mass:
+            random_mass_change_size = 17
+        else:
+            random_mass_change_size = 0
 
+        self.random_mass_change = torch.zeros(self.num_envs, random_mass_change_size, dtype=torch.float, device=self.device, requires_grad=False)  
+
+        # NOTE: Does 0 and refer to the base mass of the robot, and not com
+        # props[0].mass would refer to center of mass
         if self.cfg.domain_rand.randomize_base_mass:
-            rng = self.cfg.domain_rand.added_base_mass_range
-            # NOTE: Does 0 and refer to the base mass of the robot, and not com?
-            # props[0].mass would refer to center of mass
-            props[0].mass += np.random.uniform(rng[0], rng[1])
+            rng_range = self.cfg.domain_rand.added_base_mass_range
+            rng = np.random.uniform(rng_range[0], rng_range[1])
+            props[0].mass += rng
             self.random_mass_change[0] = props[0].mass
         if self.cfg.domain_rand.randomize_link_mass:
             for i in (2, 3, 6, 7, 10, 11, 14, 15):
