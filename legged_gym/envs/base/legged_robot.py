@@ -478,7 +478,6 @@ class LeggedRobot(BaseTask):
             self.command_ranges["lin_vel_x"][1] = np.clip(self.command_ranges["lin_vel_x"][1] + 0.5, 0., self.cfg.commands.max_curriculum)
 
 
-    # TODO: Make a1 class that extends this and use that to write a new get noise scale vec function, if we want to use noise in our experiments
     def _get_noise_scale_vec(self, cfg):
         """ Sets a vector used to scale the noise added to the observations.
             [NOTE]: Must be adapted when changing the observations structure
@@ -502,6 +501,12 @@ class LeggedRobot(BaseTask):
         noise_vec[36:48] = 0. # previous actions
         if self.cfg.terrain.measure_heights:
             noise_vec[48:235] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
+        if self.cfg.domain_rand.randomize_base_mass: # 1 Added due to trunk / base mass change
+            noise_vec[235:236] = noise_scales.base_mass_change * noise_level * self.obs_scales.base_mass_change
+        if self.cfg.domain_rand.randomize_link_mass: # 17 Added due to link masses change
+            noise_vec[236:253] = noise_scales.link_mass_change * noise_level * self.obs_scales.link_mass_change
+        if self.cfg.control.break_joints: # 4 Added due to adding bit mask for joint breakage of 4 possible joints
+            pass # No real point in adding noise to joint breakage
         return noise_vec
 
     #----------------------------------------
