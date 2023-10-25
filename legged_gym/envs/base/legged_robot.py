@@ -320,17 +320,6 @@ class LeggedRobot(BaseTask):
         #     print(f"Total mass {sum} (before randomization)")
         # randomize base mass
 
-        if self.cfg.domain_rand.randomize_base_mass and self.cfg.domain_rand.randomize_link_mass:
-            random_mass_change_size = 18
-        elif self.cfg.domain_rand.randomize_base_mass:
-            random_mass_change_size = 1
-        elif self.cfg.domain_rand.randomize_link_mass:
-            random_mass_change_size = 17
-        else:
-            random_mass_change_size = 0
-
-        self.random_mass_change = torch.zeros(self.num_envs, random_mass_change_size, dtype=torch.float, device=self.device, requires_grad=False)  
-
         # NOTE: Does 0 and refer to the base mass of the robot, and not com
         # props[0].mass would refer to center of mass
         if self.cfg.domain_rand.randomize_base_mass:
@@ -586,6 +575,7 @@ class LeggedRobot(BaseTask):
             for i in range(self.cfg.env.num_envs):
                 break_joint = random.randint(8, 11)
                 self.breakage_mask[i, break_joint] = 0
+        self.breakage_mask_copy = torch.clone(self.breakage_mask).requires_grad_(True)
 
     def _prepare_reward_function(self):
         """ Prepares a list of reward functions, whcih will be called to compute the total reward.

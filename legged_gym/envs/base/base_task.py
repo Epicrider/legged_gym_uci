@@ -59,9 +59,15 @@ class BaseTask():
 
         self.num_envs = cfg.env.num_envs
         self.num_obs = cfg.env.num_observations
-        if (cfg.domain_rand.randomize_base_mass or cfg.domain_rand.randomize_link_mass):
-            # TODO: Write this in another file specific for a1
-            self.num_obs += 16 # Is this the best way to add observations? Do I need to add observation number?
+        if cfg.domain_rand.randomize_base_mass and cfg.domain_rand.randomize_link_mass:
+            random_mass_change_size += 18
+        elif cfg.domain_rand.randomize_base_mass:
+            random_mass_change_size +=  1
+        elif cfg.domain_rand.randomize_link_mass:
+            random_mass_change_size +=  17
+        else:
+            random_mass_change_size +=  0
+        self.num_obs += random_mass_change_size
         self.num_privileged_obs = cfg.env.num_privileged_obs
         self.num_actions = cfg.env.num_actions
 
@@ -80,6 +86,9 @@ class BaseTask():
         else: 
             self.privileged_obs_buf = None
             # self.num_privileged_obs = self.num_obs
+
+        # buffers? tensor for random_mass_change
+        self.random_mass_change = torch.zeros(self.num_envs, random_mass_change_size, dtype=torch.float, device=self.device, requires_grad=False)  
 
         self.extras = {}
 
