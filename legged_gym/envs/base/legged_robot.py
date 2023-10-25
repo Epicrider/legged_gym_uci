@@ -222,13 +222,14 @@ class LeggedRobot(BaseTask):
         if self.cfg.terrain.measure_heights:
             heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
             self.obs_buf = torch.cat((self.obs_buf, heights), dim=-1)
-        # add noise if needed
-        if self.add_noise:
-            self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec # Giving the most problem because it uses 235, the size without the random mass
         if self.cfg.domain_rand.randomize_base_mass or self.cfg.domain_rand.randomize_link_mass:
             print(self.obs_buf.size())
             print(self.random_mass_change.size())
             self.obs_buf = torch.cat((self.obs_buf, self.random_mass_change), dim=-1)
+        # add noise if needed
+        if self.add_noise:
+            self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec # Giving the most problem because it uses 235, the size without the random mass
+            print(self.obs_buf.size())
 
 
     def create_sim(self):
