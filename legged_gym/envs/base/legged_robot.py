@@ -223,11 +223,12 @@ class LeggedRobot(BaseTask):
             heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
             self.obs_buf = torch.cat((self.obs_buf, heights), dim=-1)
         if self.cfg.domain_rand.randomize_base_mass or self.cfg.domain_rand.randomize_link_mass:
-            print(self.obs_buf.size())
-            print(self.random_mass_change.size())
+            print("Observation Buffer Size Before adding Randomize Base/Link Mass: ", self.obs_buf.size())
+            print("Random Mass Change Size Before adding Randomize Base/Link Mass: ", self.random_mass_change.size())
             self.obs_buf = torch.cat((self.obs_buf, self.random_mass_change), dim=-1)
         # add noise if needed
         if self.add_noise:
+            print("Observation Buffer Size Before adding Noise: ", self.obs_buf.size())
             self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec # Giving the most problem because it uses 235, the size without the random mass
             print(self.obs_buf.size())
 
@@ -733,6 +734,8 @@ class LeggedRobot(BaseTask):
         self.termination_contact_indices = torch.zeros(len(termination_contact_names), dtype=torch.long, device=self.device, requires_grad=False)
         for i in range(len(termination_contact_names)):
             self.termination_contact_indices[i] = self.gym.find_actor_rigid_body_handle(self.envs[0], self.actor_handles[0], termination_contact_names[i])
+        
+        self.random_mass_change_copy = torch.clone(self.breakage_mask).requires_grad_(True)
 
     def _get_env_origins(self):
         """ Sets environment origins. On rough terrain the origins are defined by the terrain platforms.
