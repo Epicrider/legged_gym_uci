@@ -223,19 +223,11 @@ class LeggedRobot(BaseTask):
             heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
             self.obs_buf = torch.cat((self.obs_buf, heights), dim=-1)
         if self.cfg.domain_rand.randomize_base_mass_add_obs or self.cfg.domain_rand.randomize_link_mass_add_obs:
-            print("Observation Buffer Size Before adding Randomize Base/Link Mass: ", self.obs_buf.size())
-            print("Random Mass Change Size Before adding Randomize Base/Link Mass: ", self.random_mass_change.size())
             self.obs_buf = torch.cat((self.obs_buf, self.random_mass_change), dim=-1)
         if self.cfg.control.break_joints_add_obs:
-            print("Observation Buffer Size Before adding Breaking Joints: ", self.obs_buf.size())
-            print("Breaking Joints Size Before adding Breaking Joints: ", self.random_mass_change.size())
             self.obs_buf = torch.cat((self.obs_buf, self.breakage_mask), dim=-1)
-        # add noise if needed
         if self.add_noise:
-            print("Observation Buffer Size Before adding Noise: ", self.obs_buf.size())
             self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec # Giving the most problem because it uses 235, the size without the random mass
-            print(self.obs_buf.size())
-
 
     def create_sim(self):
         """ Creates simulation, terrain and evironments
@@ -325,8 +317,7 @@ class LeggedRobot(BaseTask):
         #     print(f"Total mass {sum} (before randomization)")
         # randomize base mass
 
-        # NOTE: Does 0 and refer to the base mass of the robot, and not com
-        # props[0].mass would refer to center of mass
+        # props[0].mass refers to base mass, which is the trunk
         if self.cfg.domain_rand.randomize_base_mass:
             rng_range = self.cfg.domain_rand.added_base_mass_range
             rng = np.random.uniform(rng_range[0], rng_range[1])
@@ -551,7 +542,7 @@ class LeggedRobot(BaseTask):
         self.last_dof_vel = torch.zeros_like(self.dof_vel)
         self.last_root_vel = torch.zeros_like(self.root_states[:, 7:13])
         self.commands = torch.zeros(self.num_envs, self.cfg.commands.num_commands, dtype=torch.float, device=self.device, requires_grad=False) # x vel, y vel, yaw vel, heading
-        self.commands_scale = torch.tensor([self.obs_scales.lin_vel, self.obs_scales.lin_vel, self.obs_scales.ang_vel], device=self.device, requires_grad=False,) # TODO change this
+        self.commands_scale = torch.tensor([self.obs_scales.lin_vel, self.obs_scales.lin_vel, self.obs_scales.ang_vel], device=self.device, requires_grad=False,) 
         self.feet_air_time = torch.zeros(self.num_envs, self.feet_indices.shape[0], dtype=torch.float, device=self.device, requires_grad=False)
         self.last_contacts = torch.zeros(self.num_envs, len(self.feet_indices), dtype=torch.bool, device=self.device, requires_grad=False)
         self.base_lin_vel = quat_rotate_inverse(self.base_quat, self.root_states[:, 7:10])

@@ -95,7 +95,6 @@ class BaseTask():
             self.privileged_obs_buf = None
             # self.num_privileged_obs = self.num_obs
 
-        # buffers? tensor for random_mass_change
         self.random_mass_change = torch.zeros(self.num_envs, random_mass_change_size, dtype=torch.float, device=self.device, requires_grad=False)  
 
         self.extras = {}
