@@ -190,15 +190,15 @@ def get_args():
         {"name": "--actor_hidden_dims", "type": str, "help": "Defines Actor Hidden Dimensions for Policy."}, # Make more descriptive
         {"name": "--critic_hidden_dims", "type": str, "help": "Defines Critic Hidden Dimensions for Policy."}, # Make more descriptive
 
-        {"name": "--randomize_base_mass", "type": bool, "help": "Randomize Base mass based on range specified in configuration or flags."},
-        {"name": "--randomize_base_mass_add_observation", "type": bool, "help": "Add Randomize Base mass to the observation space."},
+        {"name": "--randomize_base_mass", "action": "store_true", "default": False, "help": "Randomize Base mass based on range specified in configuration or flags."},
+        {"name": "--randomize_base_mass_add_observation", "action": "store_true", "default": False, "help": "Add Randomize Base mass to the observation space."},
         {"name": "--randomize_base_mass_range", "type": str, "help": "Range for randomize base mass amount based on proportional value."},
-        {"name": "--randomize_link_mass", "type": bool, "help": "Randomize Link mass based on range specified in configuration or flags."},
-        {"name": "--randomize_link_mass_add_observation", "type": bool, "help": "Add Randomize Link mass to the observation space."},
+        {"name": "--randomize_link_mass", "action": "store_true", "default": False, "help": "Randomize Link mass based on range specified in configuration or flags."},
+        {"name": "--randomize_link_mass_add_observation", "action": "store_true", "default": False, "help": "Add Randomize Link mass to the observation space."},
         {"name": "--randomize_link_mass_range", "type": str, "help": "Range for randomize link mass amount based on proportional value."},
-        {"name": "--break_joints", "type": bool, "help": "Breaks a random joint."}, # Make more descriptive
-        {"name": "--break_joints_add_observation", "type": bool, "help": "Add Break Joints to the observation space."},
-        {"name": "--measure_heights", "type": bool, "help": "Measure heights."},
+        {"name": "--break_joints", "action": "store_true", "default": False, "help": "Breaks a random joint."}, # Make more descriptive
+        {"name": "--break_joints_add_observation", "action": "store_true", "default": False, "help": "Add Break Joints to the observation space."},
+        {"name": "--measure_heights", "action": "store_true", "default": False, "help": "Measure heights."},
     ]
     # parse arguments
     args = gymutil.parse_arguments(
