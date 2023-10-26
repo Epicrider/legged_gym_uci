@@ -222,10 +222,14 @@ class LeggedRobot(BaseTask):
         if self.cfg.terrain.measure_heights:
             heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
             self.obs_buf = torch.cat((self.obs_buf, heights), dim=-1)
-        if self.cfg.domain_rand.randomize_base_mass or self.cfg.domain_rand.randomize_link_mass:
+        if self.cfg.domain_rand.randomize_base_mass_add_obs or self.cfg.domain_rand.randomize_link_mass_add_obs:
             print("Observation Buffer Size Before adding Randomize Base/Link Mass: ", self.obs_buf.size())
             print("Random Mass Change Size Before adding Randomize Base/Link Mass: ", self.random_mass_change.size())
             self.obs_buf = torch.cat((self.obs_buf, self.random_mass_change), dim=-1)
+        if self.cfg.control.break_joints_add_obs:
+            print("Observation Buffer Size Before adding Breaking Joints: ", self.obs_buf.size())
+            print("Breaking Joints Size Before adding Breaking Joints: ", self.random_mass_change.size())
+            self.obs_buf = torch.cat((self.obs_buf, self.breakage_mask), dim=-1)
         # add noise if needed
         if self.add_noise:
             print("Observation Buffer Size Before adding Noise: ", self.obs_buf.size())
@@ -327,13 +331,15 @@ class LeggedRobot(BaseTask):
             rng_range = self.cfg.domain_rand.added_base_mass_range
             rng = np.random.uniform(rng_range[0], rng_range[1])
             props[0].mass += rng
-            self.random_mass_change[env_id][0] = props[0].mass
+            if self.cfg.domain_rand.randomize_base_mass_add_obs:
+                self.random_mass_change[env_id][0] = props[0].mass
         if self.cfg.domain_rand.randomize_link_mass:
             for i in (2, 3, 6, 7, 10, 11, 14, 15):
                 rng_range = self.cfg.domain_rand.added_link_mass_range
                 rng = np.random.uniform(rng_range[0], rng_range[1])
                 props[i].mass *= rng
-                self.random_mass_change[env_id][i] = props[i].mass
+                if self.cfg.domain_rand.randomize_link_mass_add_obs:
+                    self.random_mass_change[env_id][i] = props[i].mass
 
         return props
     
@@ -498,11 +504,11 @@ class LeggedRobot(BaseTask):
         noise_vec[36:48] = 0. # previous actions
         if self.cfg.terrain.measure_heights:
             noise_vec[48:235] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
-        if self.cfg.domain_rand.randomize_base_mass: # 1 Added due to trunk / base mass change
+        if self.cfg.domain_rand.randomize_base_mass_add_obs: # 1 Added due to trunk / base mass change
             noise_vec[235:236] = noise_scales.base_mass_change * noise_level * self.obs_scales.base_mass_change
-        if self.cfg.domain_rand.randomize_link_mass: # 17 Added due to link masses change
+        if self.cfg.domain_rand.randomize_link_mass_add_obs: # 17 Added due to link masses change
             noise_vec[236:253] = noise_scales.link_mass_change * noise_level * self.obs_scales.link_mass_change
-        if self.cfg.control.break_joints: # 4 Added due to adding bit mask for joint breakage of 4 possible joints
+        if self.cfg.control.break_joints_add_obs: # 4 Added due to adding bit mask for joint breakage of 4 possible joints
             pass # No real point in adding noise to joint breakage
         return noise_vec
 

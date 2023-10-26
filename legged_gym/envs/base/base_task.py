@@ -59,15 +59,19 @@ class BaseTask():
 
         self.num_envs = cfg.env.num_envs
         self.num_obs = cfg.env.num_observations
-        if cfg.domain_rand.randomize_base_mass and cfg.domain_rand.randomize_link_mass:
+        if cfg.domain_rand.randomize_base_mass_add_obs and cfg.domain_rand.randomize_link_mass_add_obs:
             random_mass_change_size = 18
-        elif cfg.domain_rand.randomize_base_mass:
+        elif cfg.domain_rand.randomize_base_mass_add_obs:
             random_mass_change_size =  1
-        elif cfg.domain_rand.randomize_link_mass:
+        elif cfg.domain_rand.randomize_link_mass_add_obs:
             random_mass_change_size =  17
         else:
             random_mass_change_size =  0
-        self.num_obs += random_mass_change_size
+        if cfg.control.break_joints_add_obs:
+            break_joints_size = 12
+        else:
+            break_joints_size = 0
+        self.num_obs += random_mass_change_size + break_joints_size
         self.num_privileged_obs = cfg.env.num_privileged_obs
         self.num_actions = cfg.env.num_actions
 

@@ -97,6 +97,7 @@ class LeggedRobotCfg(BaseConfig):
         decimation = 4
         # break_joints: Randomly disable calf joints (1 of the legs for each robot)
         break_joints = False
+        break_joints_add_obs = False
 
     class asset:
         file = ""
@@ -125,6 +126,8 @@ class LeggedRobotCfg(BaseConfig):
         friction_range = [0.5, 1.25]
         randomize_base_mass = False
         randomize_link_mass = False
+        randomize_base_mass_add_obs = False
+        randomize_link_mass_add_obs = False
         added_base_mass_range = [-1., 1.]
         added_link_mass_range = [0.8, 1.2]
         push_robots = True
