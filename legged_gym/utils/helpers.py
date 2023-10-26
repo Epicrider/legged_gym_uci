@@ -132,20 +132,22 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
             env_cfg.env.num_envs = args.num_envs
         if args.randomize_base_mass is not None:
             env_cfg.domain_rand.randomize_base_mass = args.randomize_base_mass
-        if args.randomize_base_mass_add_observations is not None:
-            env_cfg.domain_rand.randomize_base_mass_add_obs = args.randomize_base_mass_add_observations
+        if args.randomize_base_mass_add_observation is not None:
+            env_cfg.domain_rand.randomize_base_mass_add_obs = args.randomize_base_mass_add_observation
         if args.randomize_base_mass_range is not None:
             env_cfg.domain_rand.added_base_mass_range = [float(num) for num in args.randomize_base_mass_range.split(',')] 
         if args.randomize_link_mass is not None:
             env_cfg.domain_rand.randomize_link_mass = args.randomize_link_mass
-        if args.randomize_link_mass_add_observations is not None:
-            env_cfg.domain_rand.randomize_link_mass_add_obs = args.randomize_link_mass_add_observations
+        if args.randomize_link_mass_add_observation is not None:
+            env_cfg.domain_rand.randomize_link_mass_add_obs = args.randomize_link_mass_add_observation
         if args.randomize_link_mass_range is not None:
             env_cfg.domain_rand.added_link_mass_range = [float(num) for num in args.randomize_link_mass_range.split(',')] 
         if args.break_joints is not None:
             env_cfg.control.break_joints = args.break_joints
-        if args.break_joints_add_observations is not None:
-            env_cfg.control.break_joints_add_obs = args.break_joints_add_observations
+        if args.break_joints_add_observation is not None:
+            env_cfg.control.break_joints_add_obs = args.break_joints_add_observation
+        if args.measure_heights is not None:
+            env_cfg.terrain.measure_heights = args.measure_heights
     if cfg_train is not None:
         if args.seed is not None:
             cfg_train.seed = args.seed
@@ -196,6 +198,7 @@ def get_args():
         {"name": "--randomize_link_mass_range", "type": str, "help": "Range for randomize link mass amount based on proportional value."},
         {"name": "--break_joints", "type": bool, "help": "Breaks a random joint."}, # Make more descriptive
         {"name": "--break_joints_add_observation", "type": bool, "help": "Add Break Joints to the observation space."},
+        {"name": "--measure_heights", "type": bool, "help": "Measure heights."},
     ]
     # parse arguments
     args = gymutil.parse_arguments(

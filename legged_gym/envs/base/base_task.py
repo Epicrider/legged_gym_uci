@@ -71,7 +71,11 @@ class BaseTask():
             break_joints_size = 12
         else:
             break_joints_size = 0
-        self.num_obs += random_mass_change_size + break_joints_size
+        if cfg.terrain.measure_heights:
+            measure_height_size = 0
+        else:
+            measure_height_size = -187
+        self.num_obs += random_mass_change_size + break_joints_size + measure_height_size
         self.num_privileged_obs = cfg.env.num_privileged_obs
         self.num_actions = cfg.env.num_actions
 

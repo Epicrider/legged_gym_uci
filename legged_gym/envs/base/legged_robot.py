@@ -502,12 +502,16 @@ class LeggedRobot(BaseTask):
         noise_vec[12:24] = noise_scales.dof_pos * noise_level * self.obs_scales.dof_pos
         noise_vec[24:36] = noise_scales.dof_vel * noise_level * self.obs_scales.dof_vel
         noise_vec[36:48] = 0. # previous actions
+        next_elem = 48
         if self.cfg.terrain.measure_heights:
-            noise_vec[48:235] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
+            noise_vec[next_elem:next_elem+187] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
+            next_elem += 187
         if self.cfg.domain_rand.randomize_base_mass_add_obs: # 1 Added due to trunk / base mass change
-            noise_vec[235:236] = noise_scales.base_mass_change * noise_level * self.obs_scales.base_mass_change
+            noise_vec[next_elem:next_elem+1] = noise_scales.base_mass_change * noise_level * self.obs_scales.base_mass_change
+            next_elem += 1
         if self.cfg.domain_rand.randomize_link_mass_add_obs: # 17 Added due to link masses change
-            noise_vec[236:253] = noise_scales.link_mass_change * noise_level * self.obs_scales.link_mass_change
+            noise_vec[next_elem:next_elem+17] = noise_scales.link_mass_change * noise_level * self.obs_scales.link_mass_change
+            next_elem += 17
         if self.cfg.control.break_joints_add_obs: # 4 Added due to adding bit mask for joint breakage of 4 possible joints
             pass # No real point in adding noise to joint breakage
         return noise_vec
@@ -741,7 +745,7 @@ class LeggedRobot(BaseTask):
         for i in range(len(termination_contact_names)):
             self.termination_contact_indices[i] = self.gym.find_actor_rigid_body_handle(self.envs[0], self.actor_handles[0], termination_contact_names[i])
         
-        self.random_mass_change_copy = torch.clone(self.breakage_mask).requires_grad_(True)
+        self.random_mass_change_copy = torch.clone(self.random_mass_change).requires_grad_(True)
 
     def _get_env_origins(self):
         """ Sets environment origins. On rough terrain the origins are defined by the terrain platforms.
