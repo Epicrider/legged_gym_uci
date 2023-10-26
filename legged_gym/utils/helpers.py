@@ -132,14 +132,22 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
             env_cfg.env.num_envs = args.num_envs
         if args.randomize_base_mass is not None:
             env_cfg.domain_rand.randomize_base_mass = args.randomize_base_mass
+        if args.randomize_base_mass_add_observation is not None:
+            env_cfg.domain_rand.randomize_base_mass_add_obs = args.randomize_base_mass_add_observation
         if args.randomize_base_mass_range is not None:
             env_cfg.domain_rand.added_base_mass_range = [float(num) for num in args.randomize_base_mass_range.split(',')] 
         if args.randomize_link_mass is not None:
             env_cfg.domain_rand.randomize_link_mass = args.randomize_link_mass
+        if args.randomize_link_mass_add_observation is not None:
+            env_cfg.domain_rand.randomize_link_mass_add_obs = args.randomize_link_mass_add_observation
         if args.randomize_link_mass_range is not None:
             env_cfg.domain_rand.added_link_mass_range = [float(num) for num in args.randomize_link_mass_range.split(',')] 
         if args.break_joints is not None:
             env_cfg.control.break_joints = args.break_joints
+        if args.break_joints_add_observation is not None:
+            env_cfg.control.break_joints_add_obs = args.break_joints_add_observation
+        if args.measure_heights is not None:
+            env_cfg.terrain.measure_heights = args.measure_heights
     if cfg_train is not None:
         if args.seed is not None:
             cfg_train.seed = args.seed
@@ -182,11 +190,15 @@ def get_args():
         {"name": "--actor_hidden_dims", "type": str, "help": "Defines Actor Hidden Dimensions for Policy."}, # Make more descriptive
         {"name": "--critic_hidden_dims", "type": str, "help": "Defines Critic Hidden Dimensions for Policy."}, # Make more descriptive
 
-        {"name": "--randomize_base_mass", "type": bool, "help": "Randomize Base mass based on range specified in configuration or flags."},
+        {"name": "--randomize_base_mass", "action": "store_true", "default": False, "help": "Randomize Base mass based on range specified in configuration or flags."},
+        {"name": "--randomize_base_mass_add_observation", "action": "store_true", "default": False, "help": "Add Randomize Base mass to the observation space."},
         {"name": "--randomize_base_mass_range", "type": str, "help": "Range for randomize base mass amount based on proportional value."},
-        {"name": "--randomize_link_mass", "type": bool, "help": "Randomize Link mass based on range specified in configuration or flags."},
+        {"name": "--randomize_link_mass", "action": "store_true", "default": False, "help": "Randomize Link mass based on range specified in configuration or flags."},
+        {"name": "--randomize_link_mass_add_observation", "action": "store_true", "default": False, "help": "Add Randomize Link mass to the observation space."},
         {"name": "--randomize_link_mass_range", "type": str, "help": "Range for randomize link mass amount based on proportional value."},
-        {"name": "--break_joints", "type": bool, "help": "Breaks a random joint."}, # Make more descriptive
+        {"name": "--break_joints", "action": "store_true", "default": False, "help": "Breaks a random joint."}, # Make more descriptive
+        {"name": "--break_joints_add_observation", "action": "store_true", "default": False, "help": "Add Break Joints to the observation space."},
+        {"name": "--measure_heights", "action": "store_true", "default": False, "help": "Measure heights."},
     ]
     # parse arguments
     args = gymutil.parse_arguments(

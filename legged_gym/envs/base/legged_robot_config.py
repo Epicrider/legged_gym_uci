@@ -50,7 +50,7 @@ class LeggedRobotCfg(BaseConfig):
         dynamic_friction = 1.0
         restitution = 0.
         # rough terrain only:
-        measure_heights = True
+        measure_heights = False
         measured_points_x = [-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8] # 1mx1.6m rectangle (without center line)
         measured_points_y = [-0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5]
         selected = False # select a unique terrain type and pass all arguments
@@ -97,6 +97,7 @@ class LeggedRobotCfg(BaseConfig):
         decimation = 4
         # break_joints: Randomly disable calf joints (1 of the legs for each robot)
         break_joints = False
+        break_joints_add_obs = False
 
     class asset:
         file = ""
@@ -125,6 +126,8 @@ class LeggedRobotCfg(BaseConfig):
         friction_range = [0.5, 1.25]
         randomize_base_mass = False
         randomize_link_mass = False
+        randomize_base_mass_add_obs = False
+        randomize_link_mass_add_obs = False
         added_base_mass_range = [-1., 1.]
         added_link_mass_range = [0.8, 1.2]
         push_robots = True
@@ -165,6 +168,9 @@ class LeggedRobotCfg(BaseConfig):
             dof_pos = 1.0
             dof_vel = 0.05
             height_measurements = 5.0
+            base_mass_change = 1.0 # TODO: Make sure this is calibrated properly
+            link_mass_change = 1.0 # TODO: Make sure this is calibrated properly
+
         clip_observations = 100.
         clip_actions = 100.
 
@@ -178,6 +184,8 @@ class LeggedRobotCfg(BaseConfig):
             ang_vel = 0.2
             gravity = 0.05
             height_measurements = 0.1
+            base_mass_change = 0.1 # TODO: Make sure this is calibrated properly
+            link_mass_change = 0.1 # TODO: Make sure this is calibrated properly
 
     # viewer camera:
     class viewer:

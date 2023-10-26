@@ -59,6 +59,23 @@ class BaseTask():
 
         self.num_envs = cfg.env.num_envs
         self.num_obs = cfg.env.num_observations
+        if cfg.domain_rand.randomize_base_mass_add_obs and cfg.domain_rand.randomize_link_mass_add_obs:
+            random_mass_change_size = 18
+        elif cfg.domain_rand.randomize_base_mass_add_obs:
+            random_mass_change_size =  1
+        elif cfg.domain_rand.randomize_link_mass_add_obs:
+            random_mass_change_size =  17
+        else:
+            random_mass_change_size =  0
+        if cfg.control.break_joints_add_obs:
+            break_joints_size = 12
+        else:
+            break_joints_size = 0
+        if cfg.terrain.measure_heights:
+            measure_height_size = 0
+        else:
+            measure_height_size = -187
+        self.num_obs += random_mass_change_size + break_joints_size + measure_height_size
         self.num_privileged_obs = cfg.env.num_privileged_obs
         self.num_actions = cfg.env.num_actions
 
@@ -77,6 +94,8 @@ class BaseTask():
         else: 
             self.privileged_obs_buf = None
             # self.num_privileged_obs = self.num_obs
+
+        self.random_mass_change = torch.zeros(self.num_envs, random_mass_change_size, dtype=torch.float, device=self.device, requires_grad=False)  
 
         self.extras = {}
 

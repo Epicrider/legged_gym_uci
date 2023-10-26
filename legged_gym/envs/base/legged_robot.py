@@ -222,9 +222,12 @@ class LeggedRobot(BaseTask):
         if self.cfg.terrain.measure_heights:
             heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
             self.obs_buf = torch.cat((self.obs_buf, heights), dim=-1)
-        # add noise if needed
+        if self.cfg.domain_rand.randomize_base_mass_add_obs or self.cfg.domain_rand.randomize_link_mass_add_obs:
+            self.obs_buf = torch.cat((self.obs_buf, self.random_mass_change), dim=-1)
+        if self.cfg.control.break_joints_add_obs:
+            self.obs_buf = torch.cat((self.obs_buf, self.breakage_mask), dim=-1)
         if self.add_noise:
-            self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec
+            self.obs_buf += (2 * torch.rand_like(self.obs_buf) - 1) * self.noise_scale_vec # Giving the most problem because it uses 235, the size without the random mass
 
     def create_sim(self):
         """ Creates simulation, terrain and evironments
@@ -314,15 +317,20 @@ class LeggedRobot(BaseTask):
         #     print(f"Total mass {sum} (before randomization)")
         # randomize base mass
 
+        # props[0].mass refers to base mass, which is the trunk
         if self.cfg.domain_rand.randomize_base_mass:
-            rng = self.cfg.domain_rand.added_base_mass_range
-            # NOTE: Does 0 and refer to the base mass of the robot, and not com?
-            # props[0].mass would refer to center of mass
-            props[0].mass += np.random.uniform(rng[0], rng[1])
+            rng_range = self.cfg.domain_rand.added_base_mass_range
+            rng = np.random.uniform(rng_range[0], rng_range[1])
+            props[0].mass += rng
+            if self.cfg.domain_rand.randomize_base_mass_add_obs:
+                self.random_mass_change[env_id][0] = props[0].mass
         if self.cfg.domain_rand.randomize_link_mass:
             for i in (2, 3, 6, 7, 10, 11, 14, 15):
-                rng = self.cfg.domain_rand.added_link_mass_range
-                props[i].mass *= np.random.uniform(rng[0], rng[1])
+                rng_range = self.cfg.domain_rand.added_link_mass_range
+                rng = np.random.uniform(rng_range[0], rng_range[1])
+                props[i].mass *= rng
+                if self.cfg.domain_rand.randomize_link_mass_add_obs:
+                    self.random_mass_change[env_id][i] = props[i].mass
 
         return props
     
@@ -485,8 +493,18 @@ class LeggedRobot(BaseTask):
         noise_vec[12:24] = noise_scales.dof_pos * noise_level * self.obs_scales.dof_pos
         noise_vec[24:36] = noise_scales.dof_vel * noise_level * self.obs_scales.dof_vel
         noise_vec[36:48] = 0. # previous actions
+        next_elem = 48
         if self.cfg.terrain.measure_heights:
-            noise_vec[48:235] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
+            noise_vec[next_elem:next_elem+187] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
+            next_elem += 187
+        if self.cfg.domain_rand.randomize_base_mass_add_obs: # 1 Added due to trunk / base mass change
+            noise_vec[next_elem:next_elem+1] = noise_scales.base_mass_change * noise_level * self.obs_scales.base_mass_change
+            next_elem += 1
+        if self.cfg.domain_rand.randomize_link_mass_add_obs: # 17 Added due to link masses change
+            noise_vec[next_elem:next_elem+17] = noise_scales.link_mass_change * noise_level * self.obs_scales.link_mass_change
+            next_elem += 17
+        if self.cfg.control.break_joints_add_obs: # 4 Added due to adding bit mask for joint breakage of 4 possible joints
+            pass # No real point in adding noise to joint breakage
         return noise_vec
 
     #----------------------------------------
@@ -716,7 +734,7 @@ class LeggedRobot(BaseTask):
         self.termination_contact_indices = torch.zeros(len(termination_contact_names), dtype=torch.long, device=self.device, requires_grad=False)
         for i in range(len(termination_contact_names)):
             self.termination_contact_indices[i] = self.gym.find_actor_rigid_body_handle(self.envs[0], self.actor_handles[0], termination_contact_names[i])
-
+        
     def _get_env_origins(self):
         """ Sets environment origins. On rough terrain the origins are defined by the terrain platforms.
             Otherwise create a grid.
