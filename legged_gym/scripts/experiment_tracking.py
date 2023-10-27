@@ -44,7 +44,7 @@ protoType = {
         
         
         "randomize_base_mass": "",
-        "randomize_base_mass_range" : "-0.4,0.4",
+        "randomize_base_mass_range" : "",
         "randomize_base_mass_add_observation" : "",
         
         
@@ -77,7 +77,7 @@ for baseMass in [True, False]:
                 baseMassExperiments.append(dct)
     else:
         dct = {"randomize_base_mass": baseMass,
-                "randomize_base_mass_range" : "0,0",
+                "randomize_base_mass_range" : "0",
                 "randomize_base_mass_add_observation" : False}
         baseMassExperiments.append(dct)
         
@@ -173,10 +173,7 @@ for exp in experiments:
         
         
         model_path = os.path.join(log_dir, "model_"+str(MAX_ITERATIONS)+".pt")  # modify as needed
-        model = torch.load(model_path)
-
-        # Log the model to MLflow
-        mlflow.pytorch.log_model(model, "model")
+        mlflow.log_param("model_address", model_path)
         
         
         mlflow.log_artifacts(log_dir, "tensorboard_logs")

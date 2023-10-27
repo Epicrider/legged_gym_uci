@@ -53,6 +53,7 @@ Thumbs.db
 # logs
 logs
 runs
+mlFlowLogs
 
 # other
 *.egg-info
