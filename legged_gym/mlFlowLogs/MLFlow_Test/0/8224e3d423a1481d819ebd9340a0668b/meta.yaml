@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/8224e3d423a1481d819ebd9340a0668b/artifacts
+end_time: 1698362155655
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 8224e3d423a1481d819ebd9340a0668b
+run_name: adaptable-yak-396
+run_uuid: 8224e3d423a1481d819ebd9340a0668b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698362155646
+status: 4
+tags: []
+user_id: omar

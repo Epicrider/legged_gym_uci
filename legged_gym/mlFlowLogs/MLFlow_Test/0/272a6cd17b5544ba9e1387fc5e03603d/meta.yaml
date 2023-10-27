@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/272a6cd17b5544ba9e1387fc5e03603d/artifacts
+end_time: 1698358729882
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 272a6cd17b5544ba9e1387fc5e03603d
+run_name: amazing-moose-325
+run_uuid: 272a6cd17b5544ba9e1387fc5e03603d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698358727743
+status: 4
+tags: []
+user_id: omar

@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/9cbf28dc02a245628a93275b965eb344/artifacts
+end_time: 1698351620278
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 9cbf28dc02a245628a93275b965eb344
+run_name: likeable-yak-841
+run_uuid: 9cbf28dc02a245628a93275b965eb344
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698351618561
+status: 4
+tags: []
+user_id: omar

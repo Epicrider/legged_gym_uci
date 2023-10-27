@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/aa507ab5cc79423c9c0b94822b6038ca/artifacts
+end_time: 1698362876270
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: aa507ab5cc79423c9c0b94822b6038ca
+run_name: rare-shrimp-630
+run_uuid: aa507ab5cc79423c9c0b94822b6038ca
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698362876260
+status: 4
+tags: []
+user_id: omar

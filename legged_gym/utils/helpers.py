@@ -135,7 +135,7 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
         if args.randomize_base_mass_add_observation is not None:
             env_cfg.domain_rand.randomize_base_mass_add_obs = args.randomize_base_mass_add_observation
         if args.randomize_base_mass_range is not None:
-            env_cfg.domain_rand.added_base_mass_range = [float(num) for num in args.randomize_base_mass_range.split(',')] 
+            env_cfg.domain_rand.added_base_mass_range = [-1 * float(args.randomize_base_mass_range), float(args.randomize_base_mass_range)]
         if args.randomize_link_mass is not None:
             env_cfg.domain_rand.randomize_link_mass = args.randomize_link_mass
         if args.randomize_link_mass_add_observation is not None:
@@ -192,7 +192,7 @@ def get_args():
 
         {"name": "--randomize_base_mass", "action": "store_true", "default": False, "help": "Randomize Base mass based on range specified in configuration or flags."},
         {"name": "--randomize_base_mass_add_observation", "action": "store_true", "default": False, "help": "Add Randomize Base mass to the observation space."},
-        {"name": "--randomize_base_mass_range", "type": str, "help": "Range for randomize base mass amount based on proportional value."},
+        {"name": "--randomize_base_mass_range", "type": str, "help": "Symmetric Range for randomize base mass amount based on constant value."},
         {"name": "--randomize_link_mass", "action": "store_true", "default": False, "help": "Randomize Link mass based on range specified in configuration or flags."},
         {"name": "--randomize_link_mass_add_observation", "action": "store_true", "default": False, "help": "Add Randomize Link mass to the observation space."},
         {"name": "--randomize_link_mass_range", "type": str, "help": "Range for randomize link mass amount based on proportional value."},

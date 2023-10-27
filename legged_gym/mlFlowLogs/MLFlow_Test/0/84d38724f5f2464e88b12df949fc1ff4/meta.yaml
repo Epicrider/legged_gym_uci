@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/84d38724f5f2464e88b12df949fc1ff4/artifacts
+end_time: 1698360630560
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 84d38724f5f2464e88b12df949fc1ff4
+run_name: marvelous-duck-201
+run_uuid: 84d38724f5f2464e88b12df949fc1ff4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698360628696
+status: 4
+tags: []
+user_id: omar

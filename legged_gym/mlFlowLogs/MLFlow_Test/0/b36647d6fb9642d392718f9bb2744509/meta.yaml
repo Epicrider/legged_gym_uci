@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/b36647d6fb9642d392718f9bb2744509/artifacts
+end_time: 1698359146650
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b36647d6fb9642d392718f9bb2744509
+run_name: able-steed-26
+run_uuid: b36647d6fb9642d392718f9bb2744509
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698359144512
+status: 4
+tags: []
+user_id: omar

@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/edae5abacd6a4219a5c7d078061c9d3c/artifacts
+end_time: 1698360647077
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: edae5abacd6a4219a5c7d078061c9d3c
+run_name: enthused-fawn-280
+run_uuid: edae5abacd6a4219a5c7d078061c9d3c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698360645217
+status: 4
+tags: []
+user_id: omar

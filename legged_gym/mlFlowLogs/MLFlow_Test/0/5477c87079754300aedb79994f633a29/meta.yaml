@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/5477c87079754300aedb79994f633a29/artifacts
+end_time: 1698361559752
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 5477c87079754300aedb79994f633a29
+run_name: funny-frog-330
+run_uuid: 5477c87079754300aedb79994f633a29
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698361479740
+status: 4
+tags: []
+user_id: omar

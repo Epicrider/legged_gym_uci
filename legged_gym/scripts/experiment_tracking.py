@@ -3,11 +3,28 @@ import os
 import subprocess
 import mlflow
 import mlflow.pytorch
+import torch
 
 from legged_gym import LEGGED_GYM_ROOT_DIR, LEGGED_GYM_ENVS_DIR
 
 
 import numpy as np
+
+def get_most_recent_folder(path):
+    # List all entries in the given path
+    all_entries = os.listdir(path)
+    
+    # Filter out only directories
+    directories = [d for d in all_entries if os.path.isdir(os.path.join(path, d))]
+    
+    # If there are no directories, return None
+    if not directories:
+        return None
+    
+    # Get the most recent directory
+    most_recent_dir = max(directories, key=lambda d: os.path.getmtime(os.path.join(path, d)))
+    
+    return os.path.join(path, most_recent_dir)
 
 
 EXPERIMENT_NAME = "MLFlow_Test"
@@ -21,13 +38,13 @@ protoType = {
         "task": "a1_flat",
         "experiment_name": EXPERIMENT_NAME,
         "run_name": "",
-        "seed": 1,
+        "seed": "1",
         "actor_hidden_dims": "512,256,128",
         "critic_hidden_dims": "512,256,128",
         
         
         "randomize_base_mass": "",
-        "randomize_base_mass_range" : "",
+        "randomize_base_mass_range" : "-0.4,0.4",
         "randomize_base_mass_add_observation" : "",
         
         
@@ -40,7 +57,7 @@ protoType = {
         "break_joints_add_observation" : "",
         
         
-        "measure_heights": "True", 
+        "measure_heights": True, 
     
     
         "max_iterations" : MAX_ITERATIONS
@@ -55,7 +72,7 @@ for baseMass in [True, False]:
             for o in [True, False]:
                 
                 dct = {"randomize_base_mass": baseMass,
-                "randomize_base_mass_range" : str(-1*i)+","+str(i),
+                "randomize_base_mass_range" : str(i),
                 "randomize_base_mass_add_observation" : o}
                 baseMassExperiments.append(dct)
     else:
@@ -121,8 +138,8 @@ train_script_path = "train.py"
 master_log_dir = f'{LEGGED_GYM_ROOT_DIR}'
 
 # Define the base directory where train.py saves the logs and models
-base_log_dir = os.path.join(master_log_dir, "legged_gym", "logs")
-mlflow_log_dir = os.path.join(master_log_dir, "legged_gym", "mlFlowLogs", EXPERIMENT_NAME +"/" )
+base_log_dir = os.path.join(master_log_dir, "logs")
+mlflow_log_dir = os.path.join(master_log_dir, "mlFlowLogs", EXPERIMENT_NAME +"/" )
 
 
 
@@ -137,24 +154,29 @@ for exp in experiments:
             mlflow.log_param(param_name, param_value)
         
         # Build the command to run train.py
-        command = ["python", train_script_path]
+        command = ["python3", train_script_path]
         for param_name, param_value in exp.items():
             if param_value != False and param_value != '':
                 command.append(f"--{param_name}")
                 if param_value!= True:
                     command.append(str(param_value))
         
+        print("Command:", command)
+
         # Run train.py
         subprocess.run(command)
         
         # Log the model and TensorBoard logs
         experiment_name = exp["experiment_name"]
         run_name = exp["run_name"]
-        log_dir = os.path.join(base_log_dir, experiment_name, run_name)
+        log_dir = get_most_recent_folder(os.path.join(base_log_dir, experiment_name))
         
         
         model_path = os.path.join(log_dir, "model_"+str(MAX_ITERATIONS)+".pt")  # modify as needed
-        mlflow.pytorch.log_model(model_path, "model")
+        model = torch.load(model_path)
+
+        # Log the model to MLflow
+        mlflow.pytorch.log_model(model, "model")
         
         
         mlflow.log_artifacts(log_dir, "tensorboard_logs")

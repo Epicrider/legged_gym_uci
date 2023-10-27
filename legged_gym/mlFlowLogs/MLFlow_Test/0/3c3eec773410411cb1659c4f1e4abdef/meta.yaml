@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/3c3eec773410411cb1659c4f1e4abdef/artifacts
+end_time: 1698359650647
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3c3eec773410411cb1659c4f1e4abdef
+run_name: judicious-lynx-720
+run_uuid: 3c3eec773410411cb1659c4f1e4abdef
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698359648492
+status: 4
+tags: []
+user_id: omar

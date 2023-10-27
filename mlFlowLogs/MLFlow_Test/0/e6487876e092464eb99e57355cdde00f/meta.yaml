@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/mlFlowLogs/MLFlow_Test/0/e6487876e092464eb99e57355cdde00f/artifacts
+end_time: 1698363047533
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e6487876e092464eb99e57355cdde00f
+run_name: magnificent-ox-124
+run_uuid: e6487876e092464eb99e57355cdde00f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698363047524
+status: 4
+tags: []
+user_id: omar

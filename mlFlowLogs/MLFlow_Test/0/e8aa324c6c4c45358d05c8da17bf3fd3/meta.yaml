@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/mlFlowLogs/MLFlow_Test/0/e8aa324c6c4c45358d05c8da17bf3fd3/artifacts
+end_time: 1698363146400
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e8aa324c6c4c45358d05c8da17bf3fd3
+run_name: learned-ram-138
+run_uuid: e8aa324c6c4c45358d05c8da17bf3fd3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698363146392
+status: 4
+tags: []
+user_id: omar

@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/f1d6f2867c9e4fa697120ef0936af758/artifacts
+end_time: 1698358627617
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: f1d6f2867c9e4fa697120ef0936af758
+run_name: ambitious-horse-117
+run_uuid: f1d6f2867c9e4fa697120ef0936af758
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698358625460
+status: 4
+tags: []
+user_id: omar

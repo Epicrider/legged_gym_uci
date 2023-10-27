@@ -1,0 +1,15 @@
+artifact_uri: /home/omar/Documents/Repos/Research/legged_gym/legged_gym/mlFlowLogs/MLFlow_Test/0/e541318b88b64a40a924b936d7a39deb/artifacts
+end_time: 1698361663359
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e541318b88b64a40a924b936d7a39deb
+run_name: tasteful-turtle-929
+run_uuid: e541318b88b64a40a924b936d7a39deb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1698361563998
+status: 4
+tags: []
+user_id: omar
