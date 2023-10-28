@@ -10,6 +10,21 @@ from legged_gym import LEGGED_GYM_ROOT_DIR, LEGGED_GYM_ENVS_DIR
 
 import numpy as np
 
+import tensorflow as tf
+from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+
+
+def extract_tensorboard_metrics(log_dir):
+    event_acc = EventAccumulator(log_dir)
+    event_acc.Reload()  # Load the TensorBoard events
+
+    # Fetch the scalar metrics
+    scalar_metrics = {}
+    for tag in event_acc.Tags()["scalars"]:
+        scalar_metrics[tag] = [x.value for x in event_acc.Scalars(tag)]
+    
+    return scalar_metrics
+
 def get_most_recent_folder(path):
     # List all entries in the given path
     all_entries = os.listdir(path)
@@ -161,6 +176,7 @@ for exp in experiments:
                 if param_value!= True:
                     command.append(str(param_value))
         
+        # command.append("--headless")
         print("Command:", command)
 
         # Run train.py
@@ -172,10 +188,12 @@ for exp in experiments:
         log_dir = get_most_recent_folder(os.path.join(base_log_dir, experiment_name))
         
         
-        model_path = os.path.join(log_dir, "model_"+str(MAX_ITERATIONS)+".pt")  # modify as needed
-        mlflow.log_param("model_address", model_path)
-        
-        
+        metrics = extract_tensorboard_metrics(log_dir)
+        for metric_name, values in metrics.items():
+            print(metric_name)
+            for step, value in enumerate(values):
+                mlflow.log_metric(metric_name.replace("/", "_"), value, step=step)
+
         mlflow.log_artifacts(log_dir, "tensorboard_logs")
 
 
