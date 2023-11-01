@@ -147,19 +147,21 @@ for expList in baseMassExperiments + linkMassExperiments + breakJointsExperiment
 
     ctr+=1
 
+print("Experiment Example", experiments[0])
 
 # Define the path to your train.py script
 train_script_path = "train.py"
 master_log_dir = f'{LEGGED_GYM_ROOT_DIR}'
+print("Master Log Directory:", master_log_dir)
 
 # Define the base directory where train.py saves the logs and models
 base_log_dir = os.path.join(master_log_dir, "logs")
-mlflow_log_dir = os.path.join(master_log_dir, "mlFlowLogs", EXPERIMENT_NAME +"/" )
+# mlflow_log_dir = os.path.join(master_log_dir, "mlFlowLogs", EXPERIMENT_NAME +"/" )
+mlflow_log_dir = os.path.join(master_log_dir, "mlruns", EXPERIMENT_NAME +"/" )
+print("MLFlow Log Directory", mlflow_log_dir)
 
+mlflow.tensorflow.autolog()
 
-
-
-mlflow.set_tracking_uri(mlflow_log_dir)
 # Run each experiment
 for exp in experiments:
     with mlflow.start_run():
@@ -186,7 +188,6 @@ for exp in experiments:
         experiment_name = exp["experiment_name"]
         run_name = exp["run_name"]
         log_dir = get_most_recent_folder(os.path.join(base_log_dir, experiment_name))
-        
         
         metrics = extract_tensorboard_metrics(log_dir)
         for metric_name, values in metrics.items():
