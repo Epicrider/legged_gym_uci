@@ -1,0 +1,108 @@
+{
+    "os": "Linux-5.19.0-46-generic-x86_64-with-glibc2.17",
+    "python": "3.8.18",
+    "heartbeatAt": "2023-11-01T23:19:09.939459",
+    "startedAt": "2023-11-01T23:19:09.393580",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "wnb.py",
+    "codePathLocal": "wnb.py",
+    "codePath": "legged_gym/scripts/wnb.py",
+    "git": {
+        "remote": "https://github.com/Epicrider/legged_gym_uci",
+        "commit": "38cd389407298b5c88654831e31bd68cae63f581"
+    },
+    "email": "omarepic1@gmail.com",
+    "root": "/home/omar/Documents/Repos/Research/legged_gym",
+    "host": "omar",
+    "username": "omar",
+    "executable": "/home/omar/miniconda3/envs/gym2/bin/python3",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 3829.345416666667,
+        "min": 800.0,
+        "max": 4400.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4158.049,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4200.881,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4160.384,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 1849.331,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4193.484,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4135.843,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2600.0,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4179.719,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4246.41,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4193.77,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4310.609,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 4167.792,
+            "min": 800.0,
+            "max": 4400.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 224.4501190185547,
+            "used": 114.87225723266602
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3060 Ti",
+            "memory_total": 8589934592
+        }
+    ],
+    "memory": {
+        "total": 15.484600067138672
+    }
+}

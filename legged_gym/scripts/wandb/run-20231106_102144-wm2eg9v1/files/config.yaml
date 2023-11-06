@@ -1,0 +1,79 @@
+wandb_version: 1
+
+task:
+  desc: null
+  value: a1_flat
+experiment_name:
+  desc: null
+  value: MLFlow_Test_4
+run_name:
+  desc: null
+  value: Run_1
+seed:
+  desc: null
+  value: '1'
+actor_hidden_dims:
+  desc: null
+  value: 512,256,128
+critic_hidden_dims:
+  desc: null
+  value: 512,256,128
+randomize_base_mass:
+  desc: null
+  value: true
+randomize_base_mass_range:
+  desc: null
+  value: '0.5'
+randomize_base_mass_add_observation:
+  desc: null
+  value: false
+randomize_link_mass:
+  desc: null
+  value: ''
+randomize_link_mass_range:
+  desc: null
+  value: ''
+randomize_link_mass_add_observation:
+  desc: null
+  value: ''
+break_joints:
+  desc: null
+  value: ''
+break_joints_add_observation:
+  desc: null
+  value: ''
+measure_heights:
+  desc: null
+  value: true
+max_iterations:
+  desc: null
+  value: 1500
+_wandb:
+  desc: null
+  value:
+    python_version: 3.8.18
+    cli_version: 0.15.12
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1699294904.151592
+    t:
+      1:
+      - 1
+      - 2
+      - 3
+      - 55
+      2:
+      - 1
+      - 2
+      - 3
+      - 55
+      3:
+      - 2
+      - 16
+      - 23
+      4: 3.8.18
+      5: 0.15.12
+      8:
+      - 5
+      13: linux-x86_64

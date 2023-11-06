@@ -55,6 +55,7 @@ logs
 runs
 mlFlowLogs
 mlruns
+legged_gym/scripts/wandb/
 
 # other
 *.egg-info

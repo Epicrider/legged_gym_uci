@@ -1,28 +1,33 @@
 
 import os
 import subprocess
-import mlflow
-import mlflow.pytorch
+#import mlflow
+#import mlflow.pytorch
 import torch
-
-from legged_gym import LEGGED_GYM_ROOT_DIR, LEGGED_GYM_ENVS_DIR
-
-
 import numpy as np
 
 import tensorflow as tf
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+import wandb
 
+from legged_gym import LEGGED_GYM_ROOT_DIR, LEGGED_GYM_ENVS_DIR
+
+def log_metrics(metrics):
+    for i in range(0, len(list(metrics.items())[0][1])):
+        step_dict = dict()
+        for name in metrics.keys():
+            step_dict[name] = metrics[name][i][1]
+        wandb.log(step_dict, step=i)
 
 def extract_tensorboard_metrics(log_dir):
     event_acc = EventAccumulator(log_dir)
-    event_acc.Reload()  # Load the TensorBoard events
+    event_acc.Reload()
 
-    # Fetch the scalar metrics
     scalar_metrics = {}
     for tag in event_acc.Tags()["scalars"]:
-        scalar_metrics[tag] = [x.value for x in event_acc.Scalars(tag)]
-    
+        # This should create a list of tuples (step, value)
+        scalar_metrics[tag] = [(x.step, x.value) for x in event_acc.Scalars(tag)]
+
     return scalar_metrics
 
 def get_most_recent_folder(path):
@@ -42,7 +47,7 @@ def get_most_recent_folder(path):
     return os.path.join(path, most_recent_dir)
 
 
-EXPERIMENT_NAME = "MLFlow_Test"
+EXPERIMENT_NAME = "MLFlow_Test_4"
 MAX_ITERATIONS = 1500
 
 loadRange = np.array([0.5, 1, 1.5])
@@ -156,18 +161,12 @@ print("Master Log Directory:", master_log_dir)
 
 # Define the base directory where train.py saves the logs and models
 base_log_dir = os.path.join(master_log_dir, "logs")
-# mlflow_log_dir = os.path.join(master_log_dir, "mlFlowLogs", EXPERIMENT_NAME +"/" )
-mlflow_log_dir = os.path.join(master_log_dir, "mlruns", EXPERIMENT_NAME +"/" )
-print("MLFlow Log Directory", mlflow_log_dir)
 
-
-# Run each experiment
+# Replace the MLflow logging in the experiments loop with wandb logging
 for exp in experiments:
-    with mlflow.start_run():
-        
-        # Log parameters
-        for param_name, param_value in exp.items():
-            mlflow.log_param(param_name, param_value)
+    # Initialize a new wandb run
+    with wandb.init(project=EXPERIMENT_NAME, config=exp):
+        # wandb.config is automatically populated with the values from exp
         
         # Build the command to run train.py
         command = ["python3", train_script_path]
@@ -177,27 +176,13 @@ for exp in experiments:
                 if param_value!= True:
                     command.append(str(param_value))
         
-        # command.append("--headless")
-        print("Command:", command)
+        command.append("--headless")
 
         # Run train.py
         subprocess.run(command)
         
-        # Log the model and TensorBoard logs
         experiment_name = exp["experiment_name"]
-        run_name = exp["run_name"]
         log_dir = get_most_recent_folder(os.path.join(base_log_dir, experiment_name))
-        
         metrics = extract_tensorboard_metrics(log_dir)
-        for metric_name, values in metrics.items():
-            print(metric_name)
-            for step, value in enumerate(values):
-                mlflow.log_metric(metric_name.replace("/", "_"), value, step=step)
-
-        mlflow.log_artifacts(log_dir, "tensorboard_logs")
-        mlflow.end_run()
-
-
-
-
-
+        log_metrics(metrics)
+        
